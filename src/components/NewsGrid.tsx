@@ -6,6 +6,7 @@ import React, {
   useRef,
   useEffect,
 } from "react";
+import { Link } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay, Virtual } from "swiper/modules";
 import "swiper/css";
@@ -81,7 +82,7 @@ const ArticleCard = memo(
             onIntersect();
           }
         },
-        { threshold: 0.1 }
+        { threshold: 0.1 },
       );
 
       if (cardRef.current) {
@@ -100,29 +101,36 @@ const ArticleCard = memo(
         ref={cardRef}
         className="bg-white overflow-hidden shadow-sm hover:shadow-md transition-shadow h-full flex flex-col"
       >
-        <div className="relative h-48">
-          <img
-            src={
-              article.image_url ||
-              `https://images.unsplash.com/photo-${article.id}?w=800&h=600&fit=crop`
-            }
-            alt={article.title}
-            className="w-full h-full object-cover"
-            loading="lazy"
-            width={800}
-            height={600}
-            onError={(e) => {
-              e.currentTarget.src = "/fallback-image.jpg";
-            }}
-          />
-        </div>
+        <Link to={`/post/${article.id}`} className="block">
+          <div className="relative h-48">
+            <img
+              src={
+                article.image_url ||
+                `https://images.unsplash.com/photo-${article.id}?w=800&h=600&fit=crop`
+              }
+              alt={article.title}
+              className="w-full h-full object-cover"
+              loading="lazy"
+              width={800}
+              height={600}
+              onError={(e) => {
+                e.currentTarget.src = "/fallback-image.jpg";
+              }}
+            />
+          </div>
+        </Link>
         <div className="p-4 flex flex-col flex-1">
-          <span className="text-red-600 text-sm mb-2 block">
+          <Link
+            to={`/category/${article.categories?.name}`}
+            className="text-red-600 text-sm mb-2 block hover:underline"
+          >
             {article.categories?.name || "Uncategorized"}
-          </span>
-          <h3 className="font-medium mb-3 line-clamp-2 hover:text-red-600 transition-colors cursor-pointer flex-1 min-h-[3rem]">
-            {article.title || "Untitled"}
-          </h3>
+          </Link>
+          <Link to={`/post/${article.id}`} className="block">
+            <h3 className="font-medium mb-3 line-clamp-2 hover:text-red-600 transition-colors cursor-pointer flex-1 min-h-[3rem]">
+              {article.title || "Untitled"}
+            </h3>
+          </Link>
           <div className="flex items-center space-x-2 mt-auto">
             <Avatar className="h-6 w-6">
               <img
@@ -152,7 +160,7 @@ const ArticleCard = memo(
         </div>
       </article>
     );
-  }
+  },
 );
 
 const NewsGrid = () => {
@@ -174,9 +182,9 @@ const NewsGrid = () => {
   const uniqueArticles = useMemo(
     () =>
       Array.from(
-        new Map(articles?.map((article) => [article.title, article])).values()
+        new Map(articles?.map((article) => [article.title, article])).values(),
       ),
-    [articles]
+    [articles],
   );
 
   const loadMore = useCallback(() => {

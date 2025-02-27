@@ -6,6 +6,7 @@ import React, {
   useRef,
   useEffect,
 } from "react";
+import { Link } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay, Virtual } from "swiper/modules";
 import "swiper/css";
@@ -84,7 +85,7 @@ const ArticleCard = memo(
             onIntersect();
           }
         },
-        { threshold: 0.1 }
+        { threshold: 0.1 },
       );
 
       if (cardRef.current) {
@@ -103,29 +104,36 @@ const ArticleCard = memo(
         ref={cardRef}
         className="bg-white overflow-hidden shadow-sm hover:shadow-md transition-shadow h-full flex flex-col"
       >
-        <div className="relative h-48">
-          <img
-            src={
-              article.image_url ||
-              `https://images.unsplash.com/photo-${article.id}?w=800&h=600&fit=crop`
-            }
-            alt={article.title}
-            className="w-full h-full object-cover"
-            loading="lazy"
-            width={800}
-            height={600}
-            onError={(e) => {
-              e.currentTarget.src = "/fallback-image.jpg";
-            }}
-          />
-        </div>
+        <Link to={`/post/${article.id}`} className="block">
+          <div className="relative h-48">
+            <img
+              src={
+                article.image_url ||
+                `https://images.unsplash.com/photo-${article.id}?w=800&h=600&fit=crop`
+              }
+              alt={article.title}
+              className="w-full h-full object-cover"
+              loading="lazy"
+              width={800}
+              height={600}
+              onError={(e) => {
+                e.currentTarget.src = "/fallback-image.jpg";
+              }}
+            />
+          </div>
+        </Link>
         <div className="p-4 flex flex-col flex-1">
-          <span className="text-red-600 text-sm mb-2 block">
+          <Link
+            to={`/category/${article.categories?.name}`}
+            className="text-red-600 text-sm mb-2 block hover:underline"
+          >
             {article.categories?.name || "Uncategorized"}
-          </span>
-          <h3 className="font-medium mb-3 line-clamp-2 hover:text-red-600 transition-colors cursor-pointer flex-1 min-h-[3rem]">
-            {article.title || "Untitled"}
-          </h3>
+          </Link>
+          <Link to={`/post/${article.id}`} className="block">
+            <h3 className="font-medium mb-3 line-clamp-2 hover:text-red-600 transition-colors cursor-pointer flex-1 min-h-[3rem]">
+              {article.title || "Untitled"}
+            </h3>
+          </Link>
           <div className="flex items-center space-x-2 mt-auto">
             <Avatar className="h-6 w-6">
               <img
@@ -155,7 +163,7 @@ const ArticleCard = memo(
         </div>
       </article>
     );
-  }
+  },
 );
 
 const NewsByCategory = ({ category = "Business" }: NewsByCategoryProps) => {
@@ -177,9 +185,9 @@ const NewsByCategory = ({ category = "Business" }: NewsByCategoryProps) => {
   const uniqueArticles = useMemo(
     () =>
       Array.from(
-        new Map(articles?.map((article) => [article.title, article])).values()
+        new Map(articles?.map((article) => [article.title, article])).values(),
       ),
-    [articles]
+    [articles],
   );
 
   const loadMore = useCallback(() => {
@@ -230,7 +238,7 @@ const NewsByCategory = ({ category = "Business" }: NewsByCategoryProps) => {
     <ErrorBoundary>
       <section className="container mx-auto px-4 mb-12">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-semibold">Must Read</h2>
+          <h2 className="text-xl font-semibold">{category}</h2>
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
               <button className="swiper-button-prev-custom-mr p-1 rounded-full border border-gray-200 hover:border-red-600 hover:text-red-600 transition-colors">
@@ -240,9 +248,12 @@ const NewsByCategory = ({ category = "Business" }: NewsByCategoryProps) => {
                 <ChevronRightIcon className="w-5 h-5" />
               </button>
             </div>
-            <a href="/news" className="text-red-600 text-sm hover:underline">
+            <Link
+              to={`/category/${category}`}
+              className="text-red-600 text-sm hover:underline"
+            >
               See all →
-            </a>
+            </Link>
           </div>
         </div>
         <Swiper {...swiperConfig} className="w-full">

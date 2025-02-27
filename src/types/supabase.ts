@@ -55,6 +55,32 @@ export interface Database {
           created_at?: string;
         };
       };
+      comments: {
+        Row: {
+          id: string;
+          post_id: string;
+          name: string;
+          email: string | null;
+          content: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          post_id: string;
+          name: string;
+          email?: string | null;
+          content: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          post_id?: string;
+          name?: string;
+          email?: string | null;
+          content?: string;
+          created_at?: string;
+        };
+      };
       posts: {
         Row: {
           id: string;

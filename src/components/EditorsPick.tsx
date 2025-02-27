@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { Avatar } from "./ui/avatar";
 import { useQuery } from "@tanstack/react-query";
 import { getEditorsPickPosts } from "@/lib/api";
@@ -31,7 +32,10 @@ const EditorsPick = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[600px]">
         {mainArticle && (
-          <div className="lg:col-span-2 bg-white overflow-hidden shadow-sm hover:shadow-md transition-shadow h-full relative">
+          <Link
+            to={`/post/${mainArticle.id}`}
+            className="lg:col-span-2 bg-white overflow-hidden shadow-sm hover:shadow-md transition-shadow h-full relative block"
+          >
             <div className="h-full relative">
               <img
                 src={
@@ -45,7 +49,7 @@ const EditorsPick = () => {
                 <span className="text-red-400 text-sm mb-2 block">
                   {mainArticle.categories?.name}
                 </span>
-                <h3 className="text-xl font-semibold mb-2 line-clamp-2">
+                <h3 className="text-xl font-semibold mb-2 line-clamp-2 hover:text-red-300 transition-colors">
                   {mainArticle.title}
                 </h3>
                 <div className="flex items-center space-x-2">
@@ -70,14 +74,15 @@ const EditorsPick = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </Link>
         )}
 
         <div className="h-full space-y-4 overflow-y-auto will-change-scroll overscroll-contain [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-gray-400">
           {sideArticles?.map((article) => (
-            <article
+            <Link
+              to={`/post/${article.id}`}
               key={article.id}
-              className="bg-white overflow-hidden shadow-sm hover:shadow-md transition-shadow flex min-h-[100px] transform-gpu"
+              className="bg-white overflow-hidden shadow-sm hover:shadow-md transition-shadow flex min-h-[100px] transform-gpu block"
             >
               <div className="w-1/3">
                 <img
@@ -94,7 +99,7 @@ const EditorsPick = () => {
                 />
               </div>
               <div className="w-2/3 p-4">
-                <h4 className="font-medium mb-2 line-clamp-2 text-sm">
+                <h4 className="font-medium mb-2 line-clamp-2 text-sm hover:text-red-600 transition-colors">
                   {article.title}
                 </h4>
                 <span className="text-sm text-gray-400">
@@ -103,7 +108,7 @@ const EditorsPick = () => {
                   })}
                 </span>
               </div>
-            </article>
+            </Link>
           ))}
         </div>
       </div>
