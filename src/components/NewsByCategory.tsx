@@ -13,13 +13,16 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Avatar } from "./ui/avatar";
 import { useQuery } from "@tanstack/react-query";
-import { getLatestPosts } from "@/lib/api";
+import { getPostsByCategory } from "@/lib/api";
 import { formatDistanceToNow } from "date-fns";
-import LoadingSpinner from "./LoadingSpinner";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import ErrorBoundary from "./ErrorBoundary";
 
 const ITEMS_PER_PAGE = 12;
+
+interface NewsByCategoryProps {
+  category: string;
+}
 
 interface Category {
   id?: string;
@@ -129,7 +132,7 @@ const ArticleCard = memo(
                 src={
                   article.authors?.profile_image_url ||
                   `https://api.dicebear.com/7.x/avataaars/svg?seed=${
-                    article.categories?.name || "Guest"
+                    article.authors?.name || "Guest"
                   }`
                 }
                 alt={article.categories?.name || "Anonymous"}
@@ -155,7 +158,7 @@ const ArticleCard = memo(
   }
 );
 
-const NewsGrid = () => {
+const NewsByCategory = ({ category = "Business" }: NewsByCategoryProps) => {
   const [visibleItems, setVisibleItems] = useState(ITEMS_PER_PAGE);
 
   const {
@@ -163,9 +166,9 @@ const NewsGrid = () => {
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["latestPosts"],
+    queryKey: ["categoryNews", category],
     queryFn: async () => {
-      const data = await getLatestPosts();
+      const data = await getPostsByCategory(category);
       return data as Article[];
     },
     staleTime: 5 * 60 * 1000,
@@ -189,8 +192,8 @@ const NewsGrid = () => {
     slidesPerView: 1,
     autoplay: { delay: 5000, disableOnInteraction: false },
     navigation: {
-      prevEl: ".swiper-button-prev-custom",
-      nextEl: ".swiper-button-next-custom",
+      prevEl: ".swiper-button-prev-custom-mr",
+      nextEl: ".swiper-button-next-custom-mr",
     },
     breakpoints: {
       640: { slidesPerView: 1 },
@@ -227,13 +230,13 @@ const NewsGrid = () => {
     <ErrorBoundary>
       <section className="container mx-auto px-4 mb-12">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-semibold">Latest News</h2>
+          <h2 className="text-xl font-semibold">Must Read</h2>
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
-              <button className="swiper-button-prev-custom p-1 rounded-full border border-gray-200 hover:border-red-600 hover:text-red-600 transition-colors">
+              <button className="swiper-button-prev-custom-mr p-1 rounded-full border border-gray-200 hover:border-red-600 hover:text-red-600 transition-colors">
                 <ChevronLeftIcon className="w-5 h-5" />
               </button>
-              <button className="swiper-button-next-custom p-1 rounded-full border border-gray-200 hover:border-red-600 hover:text-red-600 transition-colors">
+              <button className="swiper-button-next-custom-mr p-1 rounded-full border border-gray-200 hover:border-red-600 hover:text-red-600 transition-colors">
                 <ChevronRightIcon className="w-5 h-5" />
               </button>
             </div>
@@ -261,4 +264,4 @@ const NewsGrid = () => {
   );
 };
 
-export default memo(NewsGrid);
+export default memo(NewsByCategory);

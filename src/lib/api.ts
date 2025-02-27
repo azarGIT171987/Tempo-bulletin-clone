@@ -30,8 +30,7 @@ export async function getLatestPosts() {
       authors:author_id(*)
     `,
     )
-    .order("published_at", { ascending: false })
-    .limit(4);
+    .order("published_at", { ascending: false });
 
   if (error) throw error;
   return data;
@@ -48,8 +47,7 @@ export async function getMustReadPosts() {
     `,
     )
     .eq("is_must_read", true)
-    .order("published_at", { ascending: false })
-    .limit(4);
+    .order("published_at", { ascending: false });
 
   if (error) throw error;
   return data;
@@ -66,40 +64,42 @@ export async function getEditorsPickPosts() {
     `,
     )
     .eq("is_editors_pick", true)
-    .order("published_at", { ascending: false })
-    .limit(5);
+    .order("published_at", { ascending: false });
 
   if (error) throw error;
   return data;
 }
 
 export async function getCategories() {
-  const { data, error } = await supabase.from("categories").select("*");
+  const { data, error } = await supabase
+    .from("categories")
+    .select("*");
 
   if (error) throw error;
   return data;
 }
 
-export async function getPostsByCategory(categoryId: string) {
+export async function getPostsByCategory(categoryName: string) {
   const { data, error } = await supabase
     .from("posts")
     .select(
       `
       *,
-      categories:category_id(*),
+      categories:category_id!inner(*),
       authors:author_id(*)
-    `,
+    `
     )
-    .eq("category_id", categoryId)
-    .order("published_at", { ascending: false })
-    .limit(4);
+    .eq("categories.name", categoryName)
+    .order("published_at", { ascending: false });
 
   if (error) throw error;
   return data;
 }
 
 export async function getTopAuthors() {
-  const { data, error } = await supabase.from("authors").select("*").limit(4);
+  const { data, error } = await supabase
+    .from("authors")
+    .select("*");
 
   if (error) throw error;
   return data;

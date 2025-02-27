@@ -5,7 +5,7 @@ import NewsGrid from "./NewsGrid";
 import BulletinStory from "./BulletinStory";
 import MustRead from "./MustRead";
 import EditorsPick from "./EditorsPick";
-import BusinessNews from "./BusinessNews";
+import NewsByCategory from "./NewsByCategory";
 import TopCreators from "./TopCreators";
 
 const Home = () => {
@@ -18,7 +18,7 @@ const Home = () => {
         <BulletinStory />
         <MustRead />
         <EditorsPick />
-        <BusinessNews />
+        <NewsByCategory />
         <TopCreators />
 
         {/* Newsletter Section */}

@@ -21,8 +21,8 @@ const FeaturedStory = () => {
 
   return (
     <article className="container mx-auto px-4 mb-12">
-      <div className="bg-white rounded-lg overflow-hidden shadow-lg">
-        <div className="aspect-[16/9] relative">
+      <div className="bg-white overflow-hidden shadow-lg md:flex md:h-[400px]">
+        <div className="aspect-[16/9] relative md:aspect-auto md:w-1/2">
           <img
             src={
               article.image_url ||
@@ -32,7 +32,7 @@ const FeaturedStory = () => {
             className="w-full h-full object-cover"
           />
         </div>
-        <div className="p-6">
+        <div className="p-6 md:w-1/2 md:flex md:flex-col">
           <div className="flex items-center space-x-2 mb-2">
             <Avatar className="h-6 w-6">
               <img
@@ -57,7 +57,7 @@ const FeaturedStory = () => {
           {article.excerpt && (
             <p className="text-gray-600 mb-4 line-clamp-2">{article.excerpt}</p>
           )}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-4 md:mt-auto">
             <span className="text-red-600 text-sm">
               {article.categories?.name}
             </span>
